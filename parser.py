@@ -46,8 +46,3 @@ class Parser:
         if server:
             return dict(self.server2connections[server])
         return dict(self.server2connections)
-                    
-
-
-                    
-
