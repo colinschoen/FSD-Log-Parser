@@ -32,6 +32,10 @@ class Parser:
                         continue
                     #Split our string
                     ldata = l.rsplit('Client logged in: ', 1)[1].split(':')
+                    #Is our CID numeric?
+                    if not ldata[6].isnumeric():
+                        #Glitch in the log, omit
+                        continue
                     #cid,server,callsign,client,uid
                     connection = Connection(ldata[6], ldata[1], ldata[0], ldata[3], ldata[7])
                     #Add our connection
