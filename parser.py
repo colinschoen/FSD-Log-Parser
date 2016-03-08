@@ -1,3 +1,4 @@
+import pprint
 class Connection:
     def __init__(self, cid, server, callsign, client, uid):
         self.cid = cid
@@ -5,6 +6,9 @@ class Connection:
         self.callsign = callsign
         self.client = client
         self.uid = uid
+    def echo(self):
+        pprint.pprint(vars(self))
+
 
 class Parser:
     def __init__(self, logs, debug=False):
