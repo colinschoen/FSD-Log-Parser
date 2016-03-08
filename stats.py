@@ -1,7 +1,7 @@
 import argparse
 import parser
 
-def clients(parser):
+def clients(parser, percent):
     clients2users = {}
     connections = parser.get_connections()
     for c in connections:
@@ -10,23 +10,29 @@ def clients(parser):
             clients2users[client] = 1
         else:
             clients2users[client] += 1
-    for client, count in clients2users.items():
-        print(client + ": " + str(count))
+    if percent:
+        total = sum(clients2users.values())
+        for client,count in clients2users.items():
+            print(client + ": " + str(round((count/total) * 100, 2)) + "%")
+    else:
+        for client, count in clients2users.items():
+            print(client + ": " + str(count))
 
-def run(option, *args):
+def run(option, percent, *args):
     p = parser.Parser(*args)
     options = {
             "clients": clients    
         }
-    options[option](p)
+    options[option](p, percent)
 
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description="FSD Log Statistics")
-    argparser.add_argument("t", help="Choose a type: clients", default="clients", type=str)
+    argparser.add_argument("type", help="Choose a type: clients", default="clients", type=str)
     argparser.add_argument("logs", help="Provide the log file/s", type=str)
+    argparser.add_argument("-percent", help="Compute percentages", action="store_true")
     args = argparser.parse_args()
-    run(args.t, args.logs)
+    run(args.type, args.percent, args.logs)
 
 
     
