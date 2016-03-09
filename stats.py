@@ -3,9 +3,16 @@ import parser
 
 def clients(parser, percent):
     clients2users = {}
+    seenConnections = set()
     connections = parser.get_connections()
     for c in connections:
         client = c.client
+        cid = c.cid
+        #Have we seen this use connect with this client before?
+        if (cid, client) in seenConnections:
+            #Yes, let's ignore it
+            continue
+        seenConnections.add((cid, client))
         if client not in clients2users:
             clients2users[client] = 1
         else:
