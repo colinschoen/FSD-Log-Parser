@@ -37,7 +37,8 @@ class Parser:
                         #Glitch in the log, omit
                         continue
                     #cid,server,callsign,client,uid
-                    connection = Connection(ldata[6], ldata[1], ldata[0], ldata[3], ldata[7])
+                    connection = Connection(ldata[6], ldata[1], ldata[0],
+                            ldata[3], ldata[7].rstrip())
                     #Add our connection
                     if ldata[0] in self.server2connections:
                         self.server2connections[ldata[0]].append(connection)

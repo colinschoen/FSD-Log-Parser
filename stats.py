@@ -1,6 +1,23 @@
 import argparse
 import parser
 
+def dups(parser, percent):
+    uid2cids = {}
+    connections = parser.get_connections()
+    for c in connections:
+        uid = c.uid
+        cid = c.cid
+        if uid not in uid2cids:
+            uid2cids[uid] = set()
+        uid2cids[uid].add(cid)
+    dupesFound = False
+    for uid, cids in uid2cids.items():
+        if len(cids) > 1:
+            dupesFound = True
+            print(str(uid) + " used by " + str(cids))
+    if not dupesFound:
+        print("No dupes found")
+
 def connections(parser, percent):
     connections = parser.get_connections()
     print(len(connections), "logged network connections")
@@ -45,7 +62,8 @@ def run(option, percent, *args):
     options = {
             "clients": clients,
             "users": users,
-            "connections": connections
+            "connections": connections,
+            "dups": dups
         }
     options[option](p, percent)
 
