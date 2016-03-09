@@ -1,6 +1,21 @@
 import argparse
 import parser
 
+def connections(parser, percent):
+    connections = parser.get_connections()
+    print(len(connections), "logged network connections")
+
+def users(parser, percent):
+    #How many unique users have connected to this server?
+    seenCIDs = set()
+    connections = parser.get_connections()
+    for c in connections:
+        cid = c.cid
+        if cid in seenCIDs:
+            continue
+        seenCIDs.add(cid)
+    print(len(seenCIDs), "unique user connections")
+
 def clients(parser, percent):
     clients2users = {}
     seenConnections = set()
@@ -28,7 +43,9 @@ def clients(parser, percent):
 def run(option, percent, *args):
     p = parser.Parser(*args)
     options = {
-            "clients": clients    
+            "clients": clients,
+            "users": users,
+            "connections": connections
         }
     options[option](p, percent)
 
