@@ -70,7 +70,7 @@ def run(option, percent, *args):
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description="FSD Log Statistics")
-    argparser.add_argument("type", help="Choose a type: clients", default="clients", type=str)
+    argparser.add_argument("type", help="Choose a type: clients, users, connections, dups " , default="clients", type=str)
     argparser.add_argument("logs", help="Provide the log file/s", type=str)
     argparser.add_argument("-percent", help="Compute percentages", action="store_true")
     args = argparser.parse_args()
