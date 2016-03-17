@@ -24,10 +24,15 @@ class Parser:
         #Read our logs
         self.update()
     def update(self):
+        server = None
         for log in self.logs:
             with open(log, "r") as f:
                 #Read the lines
                 for l in f:
+                    #Nab our server
+                    if not server and ": Reading" in l:
+                        server = l.rsplit(': Reading', 1)[0].rsplit()[2]
+                        print(server)
                     if "Client logged in" not in l:
                         continue
                     #Split our string
