@@ -1,11 +1,13 @@
 import pprint
 class Connection:
-    def __init__(self, cid, server, callsign, client, uid):
+    def __init__(self, cid, server, callsign, client, uid, date, time):
         self.cid = cid
         self.server = server
         self.callsign = callsign
         self.client = client
         self.uid = uid
+        self.date = date
+        self.time = time
     def echo(self):
         pprint.pprint(vars(self))
 
@@ -32,18 +34,21 @@ class Parser:
                     #Nab our server
                     if not server and ": Reading" in l:
                         server = l.rsplit(': Reading', 1)[0].rsplit()[2]
-                        print(server)
                     if "Client logged in" not in l:
                         continue
                     #Split our string
-                    ldata = l.rsplit('Client logged in: ', 1)[1].split(':')
+                    split = l.rsplit('Client logged in: ', 1)
+                    ldata = split[1].split(':')
+                    connected_at = split[0].split()[0:2]
+                    date = connected_at[0]
+                    time = connected_at[1]
                     #Is our CID numeric?
                     if not ldata[6].isnumeric():
-                        #Glitch in the log, omit
+                        #Glitch in the log, omit this record.
                         continue
                     #cid,server,callsign,client,uid
                     connection = Connection(ldata[6], ldata[1], ldata[0],
-                            ldata[3], ldata[7].rstrip())
+                            ldata[3], ldata[7].rstrip(), date, time)
                     #Add our connection
                     if ldata[0] in self.server2connections:
                         self.server2connections[ldata[0]].append(connection)
