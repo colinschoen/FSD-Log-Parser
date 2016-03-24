@@ -34,28 +34,30 @@ def users(parser, percent):
     print(len(seenCIDs), "unique user connections")
 
 def clients(parser, percent):
-    clients2users = {}
-    seenConnections = set()
-    connections = parser.get_connections()
-    for c in connections:
-        client = c.client
-        cid = c.cid
-        #Have we seen this use connect with this client before?
-        if (cid, client) in seenConnections:
-            #Yes, let's ignore it
-            continue
-        seenConnections.add((cid, client))
-        if client not in clients2users:
-            clients2users[client] = 1
+    servers = parser.get_connections_by_server()
+    for server, connections in servers.items():
+        print("=====" + server + "=====")
+        clients2users = {}
+        seenConnections = set()
+        for c in connections:
+            client = c.client
+            cid = c.cid
+            #Have we seen this use connect with this client before?
+            if (cid, client) in seenConnections:
+                #Yes, let's ignore it
+                continue
+            seenConnections.add((cid, client))
+            if client not in clients2users:
+                clients2users[client] = 1
+            else:
+                clients2users[client] += 1
+        if percent:
+            total = sum(clients2users.values())
+            for client,count in clients2users.items():
+                print("   " + client + ": " + str(round((count/total) * 100, 2)) + "%")
         else:
-            clients2users[client] += 1
-    if percent:
-        total = sum(clients2users.values())
-        for client,count in clients2users.items():
-            print(client + ": " + str(round((count/total) * 100, 2)) + "%")
-    else:
-        for client, count in clients2users.items():
-            print(client + ": " + str(count))
+            for client, count in clients2users.items():
+                print("   " + client + ": " + str(count))
 
 def run(option, percent, *args):
     p = parser.Parser(*args)
