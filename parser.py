@@ -26,8 +26,8 @@ class Parser:
         #Read our logs
         self.update()
     def update(self):
-        server = None
         for log in self.logs:
+            server = None
             with open(log, "r") as f:
                 #Read the lines
                 for l in f:
