@@ -19,8 +19,10 @@ def dups(parser, percent):
         print("No dupes found")
 
 def connections(parser, percent):
-    connections = parser.get_connections()
-    print(len(connections), "logged network connections")
+    servers = parser.get_connections_by_server()
+    for server, connections in servers.items():
+        print("=====" + server + "=====")
+        print("  ", len(connections), "logged network connections")
 
 def users(parser, percent):
     #How many unique users have connected to this server?
