@@ -20,20 +20,22 @@ def dups(parser, percent):
 
 def connections(parser, percent):
     servers = parser.get_connections_by_server()
-    for server, connections in servers.items():
+    for server,connections in servers.items():
         print("=====" + server + "=====")
         print("  ", len(connections), "logged network connections")
 
 def users(parser, percent):
-    #How many unique users have connected to this server?
-    seenCIDs = set()
-    connections = parser.get_connections()
-    for c in connections:
-        cid = c.cid
-        if cid in seenCIDs:
-            continue
-        seenCIDs.add(cid)
-    print(len(seenCIDs), "unique user connections")
+    servers = parser.get_connections_by_server()
+    for server,connections in servers.items():
+        print("=====" + server + "=====")
+        #How many unique users have connected to this server?
+        seenCIDs = set()
+        for c in connections:
+            cid = c.cid
+            if cid in seenCIDs:
+                continue
+            seenCIDs.add(cid)
+        print("  ", len(seenCIDs), "unique user connections")
 
 def clients(parser, percent):
     servers = parser.get_connections_by_server()
