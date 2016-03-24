@@ -63,8 +63,9 @@ def clients(parser, percent):
             for client, count in clients2users.items():
                 print("   " + client + ": " + str(count))
 
-def run(option, percent, *args):
-    p = parser.Parser(*args)
+def run(option, percent, start, end, *args):
+    print(start, end)
+    p = parser.Parser(start, end, *args)
     options = {
             "clients": clients,
             "users": users,
@@ -79,8 +80,10 @@ if __name__ == "__main__":
     argparser.add_argument("type", help="Choose a type: clients, users, connections, dups " , default="clients", type=str)
     argparser.add_argument("logs", help="Provide the log file/s", nargs="+")
     argparser.add_argument("-percent", help="Compute percentages", action="store_true")
+    argparser.add_argument("-start", help="Provide a start date")
+    argparser.add_argument("-end", help="Provide an end date")
     args = argparser.parse_args()
-    run(args.type, args.percent, args.logs)
+    run(args.type, args.percent, args.start, args.end, args.logs)
 
 
     

@@ -13,11 +13,20 @@ class Connection:
 
 
 class Parser:
-    def __init__(self, logs, debug=False):
+    def __init__(self, start, end, logs, debug=False):
         assert type(logs) is str or type(logs) is list, "Log must be a string or list."
         #Create some of our empty instance variables
         self.server2connections = {}
         self.connections = []
+        #If they don't provide a start and/or an end date we will assume they don't want to constrain the time frame.
+        if not start:
+            self.start = float("-inf")
+        else:
+            self.start = start
+        if not end:
+            self.end = float("inf")
+        else:
+            self.end = end
         #If log is a string convert it to an iterable (list)
         if type(logs) is str:
             self.logs = [logs]
@@ -46,6 +55,11 @@ class Parser:
                     if not ldata[6].isnumeric():
                         #Glitch in the log, omit this record.
                         continue
+                    #Let's see if we are within the time frame specified
+                    if date < self.start:
+                        continue
+                    if date > self.end:
+                        break
                     #cid,server,callsign,client,uid
                     connection = Connection(ldata[6], ldata[1], ldata[0],
                             ldata[3], ldata[7].rstrip(), date, time)
