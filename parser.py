@@ -50,11 +50,11 @@ class Parser:
                     connection = Connection(ldata[6], ldata[1], ldata[0],
                             ldata[3], ldata[7].rstrip(), date, time)
                     #Add our connection
-                    if ldata[0] in self.server2connections:
-                        self.server2connections[ldata[0]].append(connection)
+                    if server in self.server2connections:
+                        self.server2connections[server].append(connection)
                     else:
-                        self.server2connections[ldata[0]] = []
-                        self.server2connections[ldata[0]].append(connection)
+                        self.server2connections[server] = []
+                        self.server2connections[server].append(connection)
                     self.connections.append(connection)
     def get_connections(self):
         #Copy our list so the original can't be mutated
