@@ -5,6 +5,9 @@ def dups(parser, percent):
     uid2cids = {}
     connections = parser.get_connections()
     for c in connections:
+        #We won't check legacy clients for dups
+        if c.client == "Legacy":
+            continue
         uid = c.uid
         cid = c.cid
         if uid not in uid2cids:
