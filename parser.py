@@ -1,3 +1,4 @@
+from datetime import datetime
 import pprint
 class Connection:
     def __init__(self, cid, server, callsign, client, uid, date, time):
@@ -13,20 +14,17 @@ class Connection:
 
 
 class Parser:
-    def __init__(self, start, end, logs, debug=False):
+    def __init__(self, logs, start="1-1-1900", end="30-12-9999", debug=False):
         assert type(logs) is str or type(logs) is list, "Log must be a string or list."
         #Create some of our empty instance variables
         self.server2connections = {}
         self.connections = []
-        #If they don't provide a start and/or an end date we will assume they don't want to constrain the time frame.
         if not start:
-            self.start = float("-inf")
-        else:
-            self.start = start
+            start = "1-1-1900"
         if not end:
-            self.end = float("inf")
-        else:
-            self.end = end
+            end = "30-12-9999"
+        self.start = datetime.strptime(start, "%d-%m-%Y")
+        self.end = datetime.strptime(end, "%d-%m-%Y")
         #If log is a string convert it to an iterable (list)
         if type(logs) is str:
             self.logs = [logs]
@@ -49,7 +47,7 @@ class Parser:
                     split = l.rsplit('Client logged in: ', 1)
                     ldata = split[1].split(':')
                     connected_at = split[0].split()[0:2]
-                    date = connected_at[0]
+                    date = datetime.strptime(connected_at[0], "%d-%m-%Y")
                     time = connected_at[1]
                     #Is our CID numeric?
                     if not ldata[6].isnumeric():

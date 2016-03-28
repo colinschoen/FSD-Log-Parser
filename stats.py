@@ -64,14 +64,18 @@ def clients(parser, percent):
                 print("   " + client + ": " + str(count))
 
 def run(option, percent, start, end, *args):
-    print(start, end)
-    p = parser.Parser(start, end, *args)
+    p = parser.Parser(*args, start, end)
     options = {
             "clients": clients,
             "users": users,
             "connections": connections,
             "dups": dups
         }
+    #Let the user know they are constraining the dataset
+    if start:
+        print("From:", start)
+    if end:
+        print("To:", end)
     options[option](p, percent)
 
 
@@ -80,8 +84,8 @@ if __name__ == "__main__":
     argparser.add_argument("type", help="Choose a type: clients, users, connections, dups " , default="clients", type=str)
     argparser.add_argument("logs", help="Provide the log file/s", nargs="+")
     argparser.add_argument("-percent", help="Compute percentages", action="store_true")
-    argparser.add_argument("-start", help="Provide a start date")
-    argparser.add_argument("-end", help="Provide an end date")
+    argparser.add_argument("-start", help="Provide a start date e.g. 15-03-2014")
+    argparser.add_argument("-end", help="Provide an end date e.g. 15-03-2014")
     args = argparser.parse_args()
     run(args.type, args.percent, args.start, args.end, args.logs)
 
