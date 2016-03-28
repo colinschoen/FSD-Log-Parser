@@ -46,6 +46,10 @@ def clients(parser, percent):
         for c in connections:
             client = c.client
             cid = c.cid
+            #Are we dealing with a legacy client?
+            if client == "Legacy":
+                #Use the IP as the identifier
+                cid = c.uid
             #Have we seen this use connect with this client before?
             if (cid, client) in seenConnections:
                 #Yes, let's ignore it

@@ -37,10 +37,38 @@ class Parser:
             server = None
             with open(log, "r") as f:
                 #Read the lines
+                potentialLegacyClient = False
                 for l in f:
                     #Nab our server
                     if not server and ": Reading" in l:
                         server = l.rsplit(': Reading', 1)[0].rsplit()[2]
+                    if potentialLegacyClient and "Client logged in" not in l:
+                        #Ok we actually have a legacy client here. 
+                        #Since we don't have a UID, we will store the IP
+                        connection = Connection(None, server, None, "Legacy",
+                                potentialLegacyClientIP,
+                                potentialLegacyClientDate,
+                                potentialLegacyClientTime)
+                        #Add our connection
+                        if server in self.server2connections:
+                            self.server2connections[server].append(connection)
+                        else:
+                            self.server2connections[server] = []
+                            self.server2connections[server].append(connection)
+                        self.connections.append(connection)
+
+                    if potentialLegacyClient:
+                        #Reset our variable
+                        potentialLegacyClient = False
+                    if "Connection accepted" in l:
+                        potentialLegacyClient = True
+                        #Some string processing
+                        split = l.rsplit('Connection accepted from ', 1)
+                        potentialLegacyClientIP = split[1].split()[0]
+                        dt = split[0].split()
+                        potentialLegacyClientDate = dt[0]
+                        potentialLegacyClientTime = dt[1]
+                        continue
                     if "Client logged in" not in l:
                         continue
                     #Split our string
